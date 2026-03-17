@@ -1,0 +1,58 @@
+version: 2
+
+seeds:
+  - name: raw_users
+    description: "Raw user data loaded from CSV seed file."
+    columns:
+      - name: id
+        description: "Primary key for users."
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Full name of the user."
+        tests:
+          - not_null
+      - name: email
+        description: "Email address of the user."
+        tests:
+          - unique
+          - not_null
+      - name: created_at
+        description: "Date the user record was created."
+        tests:
+          - not_null
+
+  - name: raw_orders
+    description: "Raw orders data loaded from CSV seed file."
+    columns:
+      - name: id
+        description: "Primary key for orders."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "Foreign key referencing raw_users.id."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('raw_users')
+              field: id
+      - name: product_name
+        description: "Name of the ordered product."
+        tests:
+          - not_null
+      - name: amount
+        description: "Order amount in USD."
+        tests:
+          - not_null
+      - name: status
+        description: "Current status of the order."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['completed', 'pending', 'returned', 'cancelled']
+      - name: ordered_at
+        description: "Date the order was placed."
+        tests:
+          - not_null
