@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: stg_users
+    description: "Staged users sourced from raw seed data with column renames and type casts."
+    columns:
+      - name: user_id
+        description: "Primary key for users."
+        tests:
+          - unique
+          - not_null
+      - name: user_name
+        description: "Full name of the user."
+        tests:
+          - not_null
+      - name: user_email
+        description: "Email address of the user."
+        tests:
+          - unique
+          - not_null
+      - name: created_at
+        description: "Date the user record was created."
+        tests:
+          - not_null
+
+  - name: stg_orders
+    description: "Staged orders sourced from raw seed data with column renames, type casts, and status normalisation."
+    columns:
+      - name: order_id
+        description: "Primary key for orders."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "Foreign key referencing stg_users.user_id."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_users')
+              field: user_id
+      - name: product_name
+        description: "Name of the ordered product."
+        tests:
+          - not_null
+      - name: amount
+        description: "Order amount in USD."
+        tests:
+          - not_null
+      - name: status
+        description: "Current status of the order (lower-cased)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['completed', 'pending', 'returned', 'cancelled']
+      - name: ordered_at
+        description: "Date the order was placed."
+        tests:
+          - not_null

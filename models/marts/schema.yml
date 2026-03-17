@@ -1,0 +1,85 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: >
+      One row per customer with aggregated order metrics.
+      Joins staged users to order summary aggregates.
+    columns:
+      - name: user_id
+        description: "Primary key – unique customer identifier."
+        tests:
+          - unique
+          - not_null
+      - name: user_name
+        description: "Full name of the customer."
+        tests:
+          - not_null
+      - name: user_email
+        description: "Email address of the customer."
+        tests:
+          - unique
+          - not_null
+      - name: customer_since
+        description: "Date the customer record was first created."
+        tests:
+          - not_null
+      - name: total_orders
+        description: "Total number of orders placed by the customer."
+        tests:
+          - not_null
+      - name: total_spend
+        description: "Total order value (all statuses) for the customer."
+        tests:
+          - not_null
+      - name: completed_spend
+        description: "Total order value for completed orders only."
+        tests:
+          - not_null
+      - name: completed_orders
+        description: "Number of completed orders."
+        tests:
+          - not_null
+      - name: returned_orders
+        description: "Number of returned orders."
+        tests:
+          - not_null
+
+  - name: fct_orders
+    description: >
+      One row per order, enriched with customer information.
+    columns:
+      - name: order_id
+        description: "Primary key – unique order identifier."
+        tests:
+          - unique
+          - not_null
+      - name: user_id
+        description: "Foreign key to dim_customers."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: user_id
+      - name: user_name
+        description: "Name of the customer who placed the order."
+      - name: user_email
+        description: "Email of the customer who placed the order."
+      - name: product_name
+        description: "Product that was ordered."
+        tests:
+          - not_null
+      - name: amount
+        description: "Order amount in USD."
+        tests:
+          - not_null
+      - name: status
+        description: "Current status of the order."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['completed', 'pending', 'returned', 'cancelled']
+      - name: ordered_at
+        description: "Date the order was placed."
+        tests:
+          - not_null
