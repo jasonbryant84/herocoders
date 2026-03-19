@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: public
+    database: HEROCODERS
+    schema: PUBLIC
+    tables:
+      - name: AMPLITUDE_EVENTS
+      - name: MARKETPLACE_LICENSES
+      - name: MARKETPLACE_TRANSACTIONS
