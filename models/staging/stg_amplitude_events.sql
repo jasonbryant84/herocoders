@@ -12,7 +12,15 @@ renamed as (
         nullif(trim(cast(device_id as varchar)), '') as device_id,
         nullif(trim(cast(platform as varchar)), '') as platform,
         nullif(trim(cast(event_source as varchar)), '') as event_source,
-        upper(trim(product)) as product,
+        -- DATA QUALITY: Amplitude uses short product names ('checklist', 'clockwork',
+        -- 'timesheet') while Marketplace uses full names ('Checklist for Jira' etc).
+        -- Normalized to full names here to enable clean joins across sources.
+        case
+            when upper(trim(product)) = 'CHECKLIST' then 'CHECKLIST FOR JIRA'
+            when upper(trim(product)) = 'CLOCKWORK' then 'CLOCKWORK FOR JIRA'
+            when upper(trim(product)) = 'TIMESHEET' then 'TIMESHEET FOR JIRA'
+            else upper(trim(product))
+        end as product,
         nullif(trim(cast(event_properties as varchar)), '') as event_properties,
         nullif(trim(cast(user_property_company as varchar)), '') as user_property_company,
         nullif(trim(cast(user_property_plan as varchar)), '') as user_property_plan,
@@ -21,8 +29,6 @@ renamed as (
         nullif(trim(cast(country as varchar)), '') as country,
         nullif(trim(cast(region as varchar)), '') as region
 
-        -- DATA QUALITY: addon_name/product normalized to uppercase to prevent
-        -- duplicate groupings from casing inconsistencies across sources
         -- DATA QUALITY: event_properties appears to be a JSON-like blob stored as text; keep raw in staging.
         -- ASSUMPTION: JSON parsing and schema enforcement for event_properties belongs in intermediate models.
     from source

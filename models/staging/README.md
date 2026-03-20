@@ -33,6 +33,8 @@ Key fields and their purpose:
 Data quality issues found and how they were resolved:
 - DATA QUALITY: event_properties appears to be a JSON-like blob stored as text.
 - Resolution in staging: Keep event_properties as normalized text (trimmed + empty-to-null), with no parsing at this layer.
+- DATA QUALITY: Amplitude uses short product names ('checklist', 'clockwork', 'timesheet') while Marketplace uses full names ('Checklist for Jira' etc).
+- Resolution in staging: Normalize AMPLITUDE_EVENTS.product to canonical full uppercase names (CHECKLIST FOR JIRA, CLOCKWORK FOR JIRA, TIMESHEET FOR JIRA; else upper(trim(product))) to prevent duplicate product groupings and enable clean joins across sources.
 
 Assumptions made:
 - ASSUMPTION: JSON parsing and schema enforcement for event_properties belongs in intermediate models.
