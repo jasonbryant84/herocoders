@@ -13,7 +13,7 @@ renamed as (
         nullif(trim(cast(cloud_id as varchar)), '') as cloud_id,
         nullif(trim(cast(cloud_site_hostname as varchar)), '') as cloud_site_hostname,
         nullif(trim(cast(addon_key as varchar)), '') as addon_key,
-        nullif(trim(cast(addon_name as varchar)), '') as addon_name,
+        upper(trim(addon_name)) as addon_name,
         nullif(trim(cast(hosting as varchar)), '') as hosting,
         cast(last_updated as date) as last_updated,
         nullif(trim(cast(license_type as varchar)), '') as license_type,
@@ -39,6 +39,8 @@ renamed as (
         nullif(trim(cast(campaign_content as varchar)), '') as campaign_content,
         nullif(trim(cast(referrer_domain as varchar)), '') as referrer_domain
 
+        -- DATA QUALITY: addon_name/product normalized to uppercase to prevent
+        -- duplicate groupings from casing inconsistencies across sources
         -- DATA QUALITY: evaluation_opportunity_size is typed as text and may represent numeric/categorical tiers; validate distinct values downstream.
         -- DATA QUALITY: column name implied boolean but values are license ID references (e.g. 100884, 100242)
         -- ASSUMPTION: treating as FK to originating evaluation license record, renamed to evaluation_license_id for clarity
