@@ -95,10 +95,57 @@ Customer identity is resolved across Marketplace and Amplitude using normalized 
 ### 3. Key Business Insights
 
 #### Insight 1: Trials Convert Early or Not at All
-Across all three products, the average time to convert is 15-18 days - well within a typical 30-day trial window. Timesheet leads at 41.2% conversion in 15.8 days; Checklist and Clockwork follow at ~35% in ~17 days. Most conversion decisions happen in the first half of the trial period, suggesting a targeted intervention around day 10-12 for unconverted trials could meaningfully improve overall conversion rate.
+
+| Product | Total Trials | Converted | Conversion Rate | Avg Days to Convert |
+|---|---|---|---|---|
+| Timesheet for Jira | 114 | 47 | 41.2% | 15.8 days |
+| Clockwork for Jira | 760 | 273 | 35.9% | 17.9 days |
+| Checklist for Jira | 756 | 258 | 34.1% | 17.3 days |
+
+Across all three products, the average time to convert is 15-18 days —
+well within a typical 30-day trial window. Notably, most conversion
+decisions happen in the first half of the trial period. Companies that
+haven't converted by day 20 are unlikely to convert at all. A targeted
+intervention around day 10-12 for unconverted trials could meaningfully
+improve overall conversion rate.
 
 #### Insight 2: 14.5% of Paying Customers Are Invisible to Analytics
-95 of 655 customer-product relationships are marketplace_only - paying customers generating zero Amplitude events. These customers are completely invisible to any usage-based health scoring or churn prediction. This is a structural blind spot that should be addressed before investing further in predictive analytics infrastructure.
+
+| Match Type | Customers | Avg Health Score | Avg Recency Score |
+|---|---|---|---|
+| matched_on_company | 537 | 23.3 | 12.6 |
+| marketplace_only | 95 | 4.6 | 0.0 |
+| unresolved | 23 | 20.7 | 10.7 |
+
+95 of 655 customer-product relationships are marketplace_only — paying
+customers generating zero Amplitude events. These customers score 0 on
+recency, engagement, and feature adoption in the health model because
+they are completely untracked. This is a structural blind spot that
+should be investigated before investing further in predictive analytics
+infrastructure. Likely cause: server/data center hosting where Amplitude
+is not instrumented.
 
 #### Insight 3: High Engagement Doesn't Prevent Churn
-Churned customers show significantly higher user counts (14.1 avg) than converted customers (7.4 avg) and active trials (1.2 avg), yet they still left. This suggests churn is not driven by lack of adoption but by other factors - pricing, missing features, or competitive alternatives. Retention efforts should focus on understanding why engaged customers leave, not on re-engaging dormant ones.
+
+| Product | Outcome | Avg Users | Avg Days Active |
+|---|---|---|---|
+| Checklist for Jira | converted | 7.4 | 154.2 |
+| Checklist for Jira | churned | 14.1 | 58.7 |
+| Checklist for Jira | active_trial | 1.2 | 24.3 |
+| Clockwork for Jira | converted | 6.9 | 140.4 |
+| Clockwork for Jira | churned | 14.0 | 59.3 |
+| Clockwork for Jira | active_trial | 1.0 | 31.2 |
+| Timesheet for Jira | converted | 2.2 | 55.8 |
+| Timesheet for Jira | churned | 5.4 | 46.1 |
+| Timesheet for Jira | active_trial | 2.6 | 27.2 |
+
+Churned customers consistently show higher user counts than converted
+customers across all products (14.1 vs 7.4 for Checklist, 14.0 vs 6.9
+for Clockwork) yet they still left. This suggests churn is not driven
+by lack of adoption but by other factors — pricing, missing features,
+or competitive alternatives. Converted customers show deeper sustained
+engagement (154 days active vs 59 for churned), suggesting that
+long-term daily habit formation is the key differentiator between
+customers who stay and those who leave. Retention efforts should focus
+on understanding why engaged customers leave, not on re-engaging
+dormant ones.
